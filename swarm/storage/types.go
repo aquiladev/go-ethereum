@@ -224,7 +224,7 @@ func (c *Chunk) WaitToStore() {
 
 func FakeChunk(size int64, count int, chunks []*Chunk) int {
 	var i int
-	hasher := MakeHashFunc(SHA3Hash)()
+	hasher := MakeHashFunc(DefaultHash)()
 	if size > DefaultChunkSize {
 		size = DefaultChunkSize
 	}
@@ -270,7 +270,7 @@ func NewStoreParams(capacity uint64, hash SwarmHasher, basekey []byte) *StorePar
 		basekey = make([]byte, 32)
 	}
 	if hash == nil {
-		hash = MakeHashFunc("SHA3")
+		hash = MakeHashFunc(DefaultHash)
 	}
 	if capacity == 0 {
 		capacity = defaultDbCapacity

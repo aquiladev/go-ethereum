@@ -54,7 +54,7 @@ type DPAParams struct {
 
 func NewDPAParams() *DPAParams {
 	return &DPAParams{
-		Hash: SHA3Hash,
+		Hash: DefaultHash,
 	}
 }
 
@@ -66,7 +66,7 @@ func NewLocalDPA(datadir string, basekey []byte) (*DPA, error) {
 	if err != nil {
 		return nil, err
 	}
-	localStore.Validators = append(localStore.Validators, NewContentAddressValidator(MakeHashFunc(SHA3Hash)))
+	localStore.Validators = append(localStore.Validators, NewContentAddressValidator(MakeHashFunc(DefaultHash)))
 	return NewDPA(localStore, NewDPAParams()), nil
 }
 

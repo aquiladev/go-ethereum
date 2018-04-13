@@ -86,7 +86,7 @@ type LDBStoreParams struct {
 // path has no default value
 func NewLDBStoreParams(path string, capacity uint64, hash SwarmHasher, basekey []byte) *LDBStoreParams {
 	if hash == nil {
-		hash = MakeHashFunc(SHA3Hash)
+		hash = MakeHashFunc(DefaultHash)
 	}
 	if capacity == 0 {
 		capacity = singletonSwarmDbCapacity
