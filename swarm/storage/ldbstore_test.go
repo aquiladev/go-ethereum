@@ -162,11 +162,6 @@ func testIterator(t *testing.T, mock bool) {
 	var poc uint
 	chunkkeys := NewKeyCollection(chunkcount)
 	chunkkeys_results := NewKeyCollection(chunkcount)
-	var chunks []*Chunk
-
-	for i := 0; i < chunkcount; i++ {
-		chunks = append(chunks, NewChunk(nil, nil))
-	}
 
 	db, err := newTestDbStore(mock, false)
 	if err != nil {
@@ -174,7 +169,7 @@ func testIterator(t *testing.T, mock bool) {
 	}
 	defer db.close()
 
-	FakeChunk(DefaultChunkSize, chunkcount, chunks)
+	chunks := GenerateRandomChunks(DefaultChunkSize, chunkcount)
 
 	wg := &sync.WaitGroup{}
 	wg.Add(len(chunks))
