@@ -24,6 +24,8 @@ import (
 	"flag"
 	"io"
 	"io/ioutil"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"path/filepath"
 	"testing"
@@ -100,6 +102,7 @@ func mountDir(t *testing.T, api *api.Api, files map[string]fileInfo, bzzHash str
 	found := false
 	mi := swarmfs.Listmounts()
 	for _, minfo := range mi {
+		minfo.lock.RLock()
 		if minfo.MountPoint == mountDir {
 			if minfo.StartManifest != bzzHash ||
 				minfo.LatestManifest != bzzHash ||
@@ -108,6 +111,7 @@ func mountDir(t *testing.T, api *api.Api, files map[string]fileInfo, bzzHash str
 			}
 			found = true
 		}
+		minfo.lock.RUnlock()
 	}
 
 	// Test listMounts
@@ -854,6 +858,9 @@ func (ta *testAPI) appendFileContentsToEnd(t *testing.T) {
 }
 
 func TestFUSE(t *testing.T) {
+	go func() {
+		http.ListenAndServe("0.0.0.0:6060", nil)
+	}()
 	datadir, err := ioutil.TempDir("", "fuse")
 	if err != nil {
 		t.Fatalf("unable to create temp dir: %v", err)
